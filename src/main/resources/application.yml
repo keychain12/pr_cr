@@ -1,0 +1,19 @@
+spring:
+  datasource:
+    url: jdbc:log4jdbc:oracle:thin:@192.168.0.210:1521:DYDB # 또는 Service Name 형식
+    driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
+    username: dy_std
+    password: dy_std
+
+logging:
+  level:
+    org:
+      mybatis: DEBUG
+      jdbc: DEBUG
+      # 추가로 log4jdbc 로그를 위한 설정
+    log4jdbc:
+      log: DEBUG
+
+
+
+

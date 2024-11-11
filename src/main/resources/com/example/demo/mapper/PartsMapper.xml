@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.demo.mapper.PartsMapper">
+
+<select id="getList" resultType="com.example.demo.domain.Parts">
+    select * from parts
+</select>
+    <insert id="save">
+        INSERT INTO parts (
+        id,
+        inNumber,
+        inNIIN,
+        inPartsName,
+        inCode,
+        fun,
+        material,
+        inPrice,
+        thickness,
+        deleteTime,
+        color,
+        lotSize,
+        lotSizeMax,
+        lotSizeMin,
+        category,
+        time,
+        isVirtualPart,
+        isInUse,
+        isForeignDeployment
+        ) VALUES (
+        parts_seq.NEXTVAL,
+        #{inNumber},
+        #{inNIIN},
+        #{inPartsName},
+        #{inCode},
+        #{fun},
+        #{material},
+        #{inPrice},
+        #{thickness},
+        #{deleteTime},
+        #{color},
+        #{lotSize},
+        #{lotSizeMax},
+        #{lotSizeMin},
+        #{category},
+        #{time},
+        #{isVirtualPart},
+        #{isInUse},
+        #{isForeignDeployment}
+        )
+    </insert>
+
+
+    <select id="existByNum" resultType="boolean">
+        SELECT COUNT(1)
+        FROM parts
+        where inNumber = #{inNumber}
+    </select>
+
+</mapper>

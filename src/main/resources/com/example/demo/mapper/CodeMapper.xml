@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.demo.mapper.CodeMapper">
+
+    <select id="getCodeList" resultType="com.example.demo.domain.Code">
+        SELECT * FROM Code
+        <where>
+            <if test="code != null and code != ''">
+                AND code LIKE CONCAT(CONCAT('%', #{code}), '%')
+            </if>
+            <if test="codeCategoryName != null and codeCategoryName != ''">
+                AND codeCategoryName LIKE CONCAT(CONCAT('%', #{codeCategoryName}), '%')
+            </if>
+            <if test="isActive != null">
+                AND isActive = #{isActive}
+            </if>
+        </where>
+        ORDER BY codeId DESC
+    </select>
+
+    <insert id="save">
+        INSERT INTO code (codeId, code, codeCategoryName, codeDescription, isStandardCode, isActive)
+        VALUES (code_seq.nextval, #{code}, #{codeCategoryName}, #{codeDescription}, #{isStandardCode}, #{isActive})
+    </insert>
+
+    <update id="modify">
+        UPDATE Code
+        SET
+        code = #{code},
+        codeCategoryName = #{codeCategoryName},
+        codeDescription = #{codeDescription},
+        isStandardCode = #{isStandardCode},
+        isActive = #{isActive}
+        WHERE
+        codeId = #{codeId}
+    </update>
+
+    <delete id="delete">
+        delete from code where codeId = #{codeId}
+    </delete>
+
+    <insert id="detailSave">
+        insert into codeDetail (Codedetailid,
+        detailcode,
+        Codeid,
+        Codenamekor,
+        Codenameeng,
+        isactive,
+        Codeother, displayOrder)Values(codedetail_seq.nextval,#{detailCode},#{codeId},#{codeNameKor},#{codeNameEng},#{isActive},#{codeOther},#{displayOrder})
+    </insert>
+
+    <update id="detailModify">
+        UPDATE codeDetail
+        SET
+        detailCode = #{detailCode},
+        codeNameKor = #{codeNameKor},
+        codeNameEng = #{codeNameEng},
+        codeOther = #{codeOther , jdbcType=VARCHAR},
+        isActive = #{isActive},
+        displayOrder = #{displayOrder}
+        WHERE
+        codeDetailId = #{codeDetailId}
+    </update>
+
+    <delete id="detailDelete">
+        delete from codeDetail where codeDetailId = #{codeDetailId}
+    </delete>
+
+</mapper>

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>장바구니</title>
+  <link rel="stylesheet" th:href="@{/css/styles.css}" />
+  <style>
+    /* 추가적인 스타일 */
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 20px;
+        background-color: #f8f9fa;
+    }
+    h1 {
+        text-align: center;
+    }
+    form {
+        max-width: 400px;
+        margin: 0 auto;
+        background-color: #ffffff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    table {
+        width: 100%;
+        margin-top: 20px;
+        border-collapse: collapse;
+    }
+    th, td {
+        padding: 10px;
+        text-align: center;
+        border: 1px solid #ccc;
+    }
+    th {
+        background-color: #f2f2f2;
+    }
+  </style>
+</head>
+<body>
+<h1>장바구니 조회</h1>
+<form action="#" th:action="@{/cart}" method="post">
+  <div>
+    <label for="email">이메일:</label>
+    <input type="text" id="email" name="email" th:value="${email}" required />
+  </div>
+  <div>
+    <button type="submit">조회</button>
+  </div>
+</form>
+
+<h2>장바구니 목록</h2>
+<table>
+  <thead>
+  <tr>
+    <th>메뉴 이름</th>
+    <th>가격</th>
+    <th>수량</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr th:each="item : ${cartItems}">
+    <td th:text="${item.menuName}"></td>
+    <td th:text="${item.price}"></td>
+    <td th:text="${item.quantity}"></td>
+  </tr>
+  <tr th:if="${#lists.isEmpty(cartItems)}">
+    <td colspan="3">장바구니가 비어 있습니다.</td>
+  </tr>
+  </tbody>
+</table>
+
+<a href="/">홈으로 돌아가기</a>
+</body>
+</html>
