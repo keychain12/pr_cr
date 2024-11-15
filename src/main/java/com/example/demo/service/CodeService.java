@@ -7,8 +7,8 @@ import com.example.demo.dto.code.CodeDetailBatchRequest;
 import com.example.demo.dto.code.CodeDetailRequest;
 import com.example.demo.dto.code.CodeRequest;
 import com.example.demo.repository.CodeRepository;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -65,25 +65,58 @@ public class CodeService {
     // 코드 상세 일괄 cud 처리
     public void processBatchCodeDetail(CodeDetailBatchRequest request) {
 
-        if (request.getInsertDetailCodes() != null && !request.getInsertDetailCodes().isEmpty()) {
+     /*  if (request.getInsertDetailCodes() != null && !request.getInsertDetailCodes().isEmpty()) { // 기존 insert 쿼리
             for (CodeDetailRequest detailRequest : request.getInsertDetailCodes()) {
                 CodeDetail entity = detailRequest.toEntity();
                 entity.setCodeId(request.getCodeId());
                 codeRepository.detailSave(entity);
             }
+        }*/
+
+
+       if (request.getInsertDetailCodes() != null && !request.getInsertDetailCodes().isEmpty()){ // 동적쿼리로 insert 되긴하는데 mybatis 쿼리문제있음
+            List<CodeDetail> list = request.getInsertDetailCodes().stream()
+                    .map(detailRequest ->{
+                        CodeDetail entity = detailRequest.toEntity();
+                        entity.setCodeId(request.getCodeId());
+                        return entity;
+                    })
+                    .toList();
+            codeRepository.insertBatch(list);
         }
-        if (request.getUpdateDetailCodes() != null && !request.getUpdateDetailCodes().isEmpty()) {
+
+      /*  if (request.getUpdateDetailCodes() != null && !request.getUpdateDetailCodes().isEmpty()) { // 기존 update 쿼리
             for (CodeDetailRequest detailRequest : request.getUpdateDetailCodes()) {
                 CodeDetail entity = detailRequest.toEntity();
                 codeRepository.detailModify(entity);
             }
+        }*/
+
+        if (request.getUpdateDetailCodes() != null && !request.getUpdateDetailCodes().isEmpty()) { //update 배치쿼리 되긴하는데 쿼리 문제있음
+            List<CodeDetail> list = request.getUpdateDetailCodes().stream()
+                    .map(CodeDetailRequest::toEntity)
+                    .toList();
+            codeRepository.updateBatch(list);
         }
-        if (request.getDeleteDetailCodes() != null && !request.getDeleteDetailCodes().isEmpty()) {
+/*
+
+            if (request.getDeleteDetailCodes() != null && !request.getDeleteDetailCodes().isEmpty()) { // 원래 기존 하나씩 쿼리날리는 삭제쿼리
             for (CodeDetailRequest detailRequest : request.getDeleteDetailCodes()) {
                 CodeDetail entity = detailRequest.toEntity();
                 codeRepository.detailDelete(entity.getCodeDetailId());
             }
         }
+*/
+
+        if (request.getDeleteDetailCodes() != null && !request.getDeleteDetailCodes().isEmpty()) { // list로 넘기는 삭제 배치 쿼리인데 이건됨;
+            List<Long> list = request.getDeleteDetailCodes().stream()
+                    .map(a -> {
+                        CodeDetail entity = a.toEntity();
+                        return entity.getCodeDetailId();
+                    }).toList();
+            codeRepository.deleteBatch(list);
+        }
+
 
     }
 }

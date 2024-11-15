@@ -1,8 +1,10 @@
 package com.example.demo.dto.code;
 
 import com.example.demo.domain.CodeDetail;
+
+import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
+
 import jakarta.validation.constraints.Pattern;
 import lombok.*;
 
@@ -17,8 +19,8 @@ public class CodeDetailRequest {
     @NotBlank
     @Pattern(regexp = "^[가-힣0-9\\s]+$", message = "한글, 숫자, 공백만 입력할 수 있습니다.")
     private String codeNameKor; //코드한글명
-    @NotBlank
-    @Pattern(regexp = "^[a-zA-Z0-9\\s]+$", message = "영어, 숫자, 공백만 입력할 수 있습니다.")
+//    @Pattern(regexp = "^[a-zA-Z0-9\\s]+$", message = "영어, 숫자, 공백만 입력할 수 있습니다.")
+    @Pattern(regexp = "^[a-zA-Z0-9\\s]*$", message = "영어, 숫자, 공백만 입력할 수 있습니다.") // * 표시가 null 허용? 인듯
     private String codeNameEng; //코드영문명
     private String codeOther; //코드기타명
     private Boolean isActive; // 사용여부

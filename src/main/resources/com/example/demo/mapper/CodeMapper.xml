@@ -33,8 +33,7 @@
         codeDescription = #{codeDescription},
         isStandardCode = #{isStandardCode},
         isActive = #{isActive}
-        WHERE
-        codeId = #{codeId}
+        WHERE codeId = #{codeId}
     </update>
 
     <delete id="delete">
@@ -67,5 +66,70 @@
     <delete id="detailDelete">
         delete from codeDetail where codeDetailId = #{codeDetailId}
     </delete>
+
+
+
+
+
+
+
+
+<!-- insert 배치 쿼리 인데 안되네;  / open="DECLARE BEGIN" close="; END;" 이거넣어서 이제되긴하는데 문제생길수도 있다네 -->
+    <insert id="insertBatch">
+        <foreach collection="list" item="CodeDetail" separator=";" open="DECLARE BEGIN" close="; END;">
+            INSERT INTO codeDetail (
+            Codedetailid,
+            detailcode,
+            Codeid,
+            Codenamekor,
+            Codenameeng,
+            isactive,
+            Codeother,
+            displayOrder
+            )
+            VALUES (
+            codedetail_seq.nextval,
+            #{CodeDetail.detailCode, jdbcType=VARCHAR},
+            #{CodeDetail.codeId, jdbcType=INTEGER},
+            #{CodeDetail.codeNameKor, jdbcType=VARCHAR},
+            #{CodeDetail.codeNameEng, jdbcType=VARCHAR},
+            #{CodeDetail.isActive, jdbcType=BOOLEAN},
+            #{CodeDetail.codeOther, jdbcType=VARCHAR},
+            #{CodeDetail.displayOrder, jdbcType=INTEGER}
+            )
+        </foreach>
+    </insert>
+
+
+
+
+
+    <!--     update 배치 쿼리인데 안됨;   open="DECLARE BEGIN" close="; END;" 이거붙히고나서 되긴하는데 문제생길수있다는데-->
+    <update id="updateBatch">
+            <foreach collection="list" item="item" separator=";" open="DECLARE BEGIN" close="; END;">
+                UPDATE codeDetail
+                SET
+                <trim prefix=" " suffixOverrides=",">
+                    <if test="item.detailCode != null">detailCode = #{item.detailCode},</if>
+                    <if test="item.codeNameKor != null">codeNameKor = #{item.codeNameKor},</if>
+                    <if test="item.codeNameEng != null">codeNameEng = #{item.codeNameEng},</if>
+                    <if test="item.codeOther != null">codeOther = #{item.codeOther, jdbcType=VARCHAR},</if>
+                    <if test="item.isActive != null">isActive = #{item.isActive},</if>
+                    <if test="item.displayOrder != null">displayOrder = #{item.displayOrder}</if>
+                </trim>
+                WHERE codeDetailId = #{item.codeDetailId}
+            </foreach>
+
+    </update>
+
+    <!-- 배치 삭제 쿼리  인데 이건되네 ;-->
+    <delete id="deleteBatch">
+        DELETE FROM codeDetail
+        WHERE codeDetailId IN
+        <foreach collection="list" item="codeDetailId" open="(" separator="," close=")">
+            #{codeDetailId}
+        </foreach>
+    </delete>
+
 
 </mapper>

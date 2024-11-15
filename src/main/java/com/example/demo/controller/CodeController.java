@@ -77,11 +77,12 @@ public class CodeController {
                 .body(jsonResponse);
     }
 
-    @PostMapping("/code/detail/batch")
+    @PostMapping("/code/detail/batch") // 코드상세  cud 배치
     public ResponseEntity<String> codeDetailBatch(@Valid @RequestBody CodeDetailBatchRequest request) {
 
 
         System.out.println("request = " + request.toString());
+
         codeService.processBatchCodeDetail(request);
 
         return ResponseEntity

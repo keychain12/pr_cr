@@ -31,4 +31,17 @@ public interface CodeMapper {
     void detailModify(CodeDetail entity);
 
     void detailDelete(Long codeDetailId);
+
+
+
+
+
+    // insert 동적 배치쿼리 테스트 실패
+    void insertBatch(List<CodeDetail> list);
+
+    // update 동적 쿼리 테스트 실패
+    void updateBatch(List<CodeDetail> list);
+
+    // delete 동적 배치쿼리 성공
+    void deleteBatch(List<Long> list);
 }

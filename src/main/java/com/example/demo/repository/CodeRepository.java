@@ -33,6 +33,7 @@ public class CodeRepository {
         return codeMapper.getCodeDetailList(codeId);
     }
 
+
     public void detailSave(CodeDetail entity) {
         codeMapper.detailSave(entity);
     }
@@ -43,5 +44,20 @@ public class CodeRepository {
 
     public void detailDelete(Long codeDetailId) {
         codeMapper.detailDelete(codeDetailId);
+    }
+
+
+
+
+    public void insertBatch(List<CodeDetail> list) {
+        codeMapper.insertBatch(list);
+    }
+
+    public void updateBatch(List<CodeDetail> list) {
+        codeMapper.updateBatch(list);
+    }
+
+    public void deleteBatch(List<Long> list) {
+        codeMapper.deleteBatch(list);
     }
 }
