@@ -8,12 +8,15 @@ import com.example.demo.service.CodeService;
 import jakarta.validation.Valid;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import oracle.jdbc.proxy.annotation.Post;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -29,17 +32,41 @@ public class CodeController {
     @GetMapping("/code") // 코드 조회 api
     public ResponseEntity<String> getList(@RequestParam(value = "code" , required = false) String code,
                                           @RequestParam(value = "codeCategoryName", required = false) String codeCategoryName,
-                                          @RequestParam(value = "isActive" , required = false) Boolean isActive) {
+                                          @RequestParam(value = "isActive" , required = false) Boolean isActive,
+                                          @RequestParam(value = "pageNum" ,defaultValue = "1") int pageNum,
+                                          @RequestParam(value = "pageSize" , defaultValue = "10")int pageSize) {
 
         System.out.println("code = " + code);
         System.out.println("codeCategoryName = " + codeCategoryName);
         System.out.println("isActive = " + isActive);
 
 
+        // 페이징처리
+        int startNum = (pageNum - 1) * pageSize;
+
+
         List<Code> codeList =  codeService.getCodeList(code,codeCategoryName,isActive);
 
 
-        String jsonResponse = Result.result("codeList",codeList );
+
+
+        String jsonResponse = Result.result("codeList",codeList);
+
+        return ResponseEntity
+                .ok()
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(jsonResponse);
+    }
+
+    @GetMapping("/code/count")
+    public ResponseEntity<String> count() {
+
+
+        Long totalCount = codeService.getTotalCount();
+
+        System.out.println("totalCount = " + totalCount);
+
+        String jsonResponse = Result.result("totalCount",totalCount);
 
         return ResponseEntity
                 .ok()
@@ -59,11 +86,11 @@ public class CodeController {
         return ResponseEntity
                 .ok()
                 .contentType(MediaType.APPLICATION_JSON)
-                .body("ㅇㅇ");
+                .body("successfully");
     }
 
     @GetMapping("/code/detail")// 코드상세 조회 api
-    public ResponseEntity<String> getCodeDetailList(@RequestParam("codeId") Long codeId) {
+    public ResponseEntity<String> getCodeDetailList(@RequestParam(value = "codeId") Long codeId) {
 
         System.out.println("codeId = " + codeId);
         List<CodeDetail> codeDetailList = codeService.getCodeDetailList(codeId);
@@ -88,7 +115,7 @@ public class CodeController {
         return ResponseEntity
                 .ok()
                 .contentType(MediaType.APPLICATION_JSON)
-                .body("ㅇㅇ");
+                .body("successfully");
     }
 
 

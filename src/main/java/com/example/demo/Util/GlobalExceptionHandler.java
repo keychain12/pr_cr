@@ -50,9 +50,25 @@ public class GlobalExceptionHandler { // 전역 예외처리
 
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
+
+    // 모든 예외 처리 (기본적인 Exception 을 처리하는 핸들러 추가)
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ApiErrorResponse> handleAllExceptions(Exception e) {
+        // 모든 예외를 포괄적으로 처리
+        ApiErrorResponse errorResponse = new ApiErrorResponse(
+                "error",             // 상태
+                "INTERNAL_SERVER_ERROR", // 에러코드
+                e.getMessage()       // 에러메시지
+        );
+
+        // 예외 로깅
+        logger.error("Unexpected error occurred: {}", e.getMessage(), e);
+
+        return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
 /*
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<String> handleValidationExceptions(MethodArgumentNotValidException ex) {
+    public ResponseEntity<String> handleValidationExceptions(MethodArgumentNotValidException ex) { // 이건 string으로 메세지만 반환
         // 유효성 검사 실패 시 발생한 오류 메시지들 처리
         List<String> errors = ex.getBindingResult()
                 .getAllErrors()

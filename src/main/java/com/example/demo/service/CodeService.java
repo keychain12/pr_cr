@@ -21,10 +21,12 @@ public class CodeService {
 
     private final CodeRepository codeRepository;
 
+    @Transactional(readOnly = true)
     // 코드 list 가져오기
     public List<Code> getCodeList(String code, String codeCategoryName, Boolean isActive) {
         return codeRepository.getCodeList(code,codeCategoryName,isActive);
     }
+
 
     public void processBatchCodes(CodeBatchRequest batchRequest) { // 등록 수정 삭제 배치
 
@@ -58,6 +60,7 @@ public class CodeService {
     }
 
     //  코드상세 list 가져오기
+    @Transactional(readOnly = true)
     public List<CodeDetail> getCodeDetailList(Long codeId) {
         return codeRepository.getCodeDetailList(codeId);
     }
@@ -118,5 +121,9 @@ public class CodeService {
         }
 
 
+    }
+
+    public Long getTotalCount() {
+        return codeRepository.getTotalCount();
     }
 }

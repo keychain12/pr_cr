@@ -1,9 +1,16 @@
+#spring:
+#  datasource:
+#    url: jdbc:log4jdbc:oracle:thin:@192.168.0.210:1521:DYDB # 또는 Service Name 형식
+#    driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
+#    username: dy_std
+#    password: dy_std
+
 spring:
   datasource:
-    url: jdbc:log4jdbc:oracle:thin:@192.168.0.210:1521:DYDB # 또는 Service Name 형식
+    url: jdbc:log4jdbc:oracle:thin:@192.168.0.110:1521:cimms # 또는 Service Name 형식
     driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
-    username: dy_std
-    password: dy_std
+    username: MES_TOBE
+    password: MES_TOBE
 
 logging:
   level:

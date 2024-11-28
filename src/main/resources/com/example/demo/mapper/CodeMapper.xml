@@ -20,9 +20,13 @@
         ORDER BY codeId DESC
     </select>
 
+    <select id="getTotalCount">
+        select count(*) from Code
+    </select>
+
     <insert id="save">
-        INSERT INTO code (codeId, code, codeCategoryName, codeDescription, isStandardCode, isActive)
-        VALUES (code_seq.nextval, #{code}, #{codeCategoryName}, #{codeDescription}, #{isStandardCode}, #{isActive})
+        INSERT INTO code (codeId, code, codeCategoryName, codeDescription,taskType, isStandardCode, isActive)
+        VALUES (code_seq.nextval, #{code}, #{codeCategoryName}, #{codeDescription},#{taskType}, #{isStandardCode}, #{isActive})
     </insert>
 
     <update id="modify">
@@ -31,6 +35,7 @@
         code = #{code},
         codeCategoryName = #{codeCategoryName},
         codeDescription = #{codeDescription},
+        taskType = #{taskType},
         isStandardCode = #{isStandardCode},
         isActive = #{isActive}
         WHERE codeId = #{codeId}
@@ -39,6 +44,9 @@
     <delete id="delete">
         delete from code where codeId = #{codeId}
     </delete>
+
+
+
 
     <insert id="detailSave">
         insert into codeDetail (Codedetailid,
@@ -78,14 +86,19 @@
     <insert id="insertBatch">
         <foreach collection="list" item="CodeDetail" separator=";" open="DECLARE BEGIN" close="; END;">
             INSERT INTO codeDetail (
-            Codedetailid,
-            detailcode,
-            Codeid,
-            Codenamekor,
-            Codenameeng,
-            isactive,
-            Codeother,
-            displayOrder
+            codeDetailId,
+            detailCode,
+            codeId,
+            codeNameKor,
+            codeNameEng,
+            isActive,
+            codeOther,
+            displayOrder,
+            Remarks,
+            etc1,
+            etc2,
+            etc3,
+            etc4
             )
             VALUES (
             codedetail_seq.nextval,
@@ -95,7 +108,12 @@
             #{CodeDetail.codeNameEng, jdbcType=VARCHAR},
             #{CodeDetail.isActive, jdbcType=BOOLEAN},
             #{CodeDetail.codeOther, jdbcType=VARCHAR},
-            #{CodeDetail.displayOrder, jdbcType=INTEGER}
+            #{CodeDetail.displayOrder, jdbcType=INTEGER},
+            #{CodeDetail.remarks, jdbcType=VARCHAR},  <!-- 비고 -->
+            #{CodeDetail.etc1, jdbcType=VARCHAR},     <!-- 기타 1 -->
+            #{CodeDetail.etc2, jdbcType=VARCHAR},     <!-- 기타 2 -->
+            #{CodeDetail.etc3, jdbcType=VARCHAR},     <!-- 기타 3 -->
+            #{CodeDetail.etc4, jdbcType=VARCHAR}      <!-- 기타 4 -->
             )
         </foreach>
     </insert>
@@ -106,20 +124,24 @@
 
     <!--     update 배치 쿼리인데 안됨;   open="DECLARE BEGIN" close="; END;" 이거붙히고나서 되긴하는데 문제생길수있다는데-->
     <update id="updateBatch">
-            <foreach collection="list" item="item" separator=";" open="DECLARE BEGIN" close="; END;">
-                UPDATE codeDetail
-                SET
-                <trim prefix=" " suffixOverrides=",">
-                    <if test="item.detailCode != null">detailCode = #{item.detailCode},</if>
-                    <if test="item.codeNameKor != null">codeNameKor = #{item.codeNameKor},</if>
-                    <if test="item.codeNameEng != null">codeNameEng = #{item.codeNameEng},</if>
-                    <if test="item.codeOther != null">codeOther = #{item.codeOther, jdbcType=VARCHAR},</if>
-                    <if test="item.isActive != null">isActive = #{item.isActive},</if>
-                    <if test="item.displayOrder != null">displayOrder = #{item.displayOrder}</if>
-                </trim>
-                WHERE codeDetailId = #{item.codeDetailId}
-            </foreach>
-
+        <foreach collection="list" item="item" separator=";" open="DECLARE BEGIN" close="; END;">
+            UPDATE codeDetail
+            SET
+            <trim prefix=" " suffixOverrides=",">
+                <if test="item.detailCode != null">detailCode = #{item.detailCode},</if>
+                <if test="item.codeNameKor != null">codeNameKor = #{item.codeNameKor},</if>
+                <if test="item.codeNameEng != null">codeNameEng = #{item.codeNameEng},</if>
+                <if test="item.codeOther != null">codeOther = #{item.codeOther, jdbcType=VARCHAR},</if>
+                <if test="item.isActive != null">isActive = #{item.isActive},</if>
+                <if test="item.displayOrder != null">displayOrder = #{item.displayOrder},</if>
+                <if test="item.remarks != null">Remarks = #{item.remarks, jdbcType=VARCHAR},</if>
+                <if test="item.etc1 != null">etc1 = #{item.etc1, jdbcType=VARCHAR},</if>
+                <if test="item.etc2 != null">etc2 = #{item.etc2, jdbcType=VARCHAR},</if>
+                <if test="item.etc3 != null">etc3 = #{item.etc3, jdbcType=VARCHAR},</if>
+                <if test="item.etc4 != null">etc4 = #{item.etc4, jdbcType=VARCHAR}</if>
+            </trim>
+            WHERE codeDetailId = #{item.codeDetailId}
+        </foreach>
     </update>
 
     <!-- 배치 삭제 쿼리  인데 이건되네 ;-->

@@ -13,9 +13,10 @@ import java.util.List;
 public class CodeRepository {
     private final CodeMapper codeMapper;
 
-    public List<Code> getCodeList(String code, String codeCategoryName, Boolean isActive) {
+     public List<Code> getCodeList(String code, String codeCategoryName, Boolean isActive) {
         return codeMapper.getCodeList(code,codeCategoryName,isActive);
     }
+
 
     public void save(Code code) {
         codeMapper.save(code);
@@ -59,5 +60,10 @@ public class CodeRepository {
 
     public void deleteBatch(List<Long> list) {
         codeMapper.deleteBatch(list);
+    }
+
+
+    public Long getTotalCount() {
+        return codeMapper.getTotalCount();
     }
 }

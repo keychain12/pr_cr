@@ -3,9 +3,11 @@ package com.example.demo.domain;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 @Setter
 @Getter
+@ToString
 public class CodeDetail {
     private Long codeDetailId; // 코드상세 id pk
     private Long codeId;        // 코드 id fk
@@ -13,11 +15,17 @@ public class CodeDetail {
     private String codeNameKor; //코드한글명
     private String codeNameEng; //코드영문명
     private String codeOther; //코드기타명
-    private Boolean isActive; // 사용여부
+    private Integer isActive; // 사용여부
     private Long displayOrder; //표시순서
+    private String remarks; // 비고
+    private String etc1; //기타1
+    private String etc2; //기타2
+    private String etc3; //기타3
+    private String etc4; //기타4
 
     @Builder
-    public CodeDetail(Long codeDetailId, Long codeId, String detailCode, String codeNameKor, String codeNameEng, String codeOther, Boolean isActive, Long displayOrder) {
+
+    public CodeDetail(Long codeDetailId, Long codeId, String detailCode, String codeNameKor, String codeNameEng, String codeOther, Integer isActive, Long displayOrder, String remarks, String etc1, String etc2, String etc3, String etc4) {
         this.codeDetailId = codeDetailId;
         this.codeId = codeId;
         this.detailCode = detailCode;
@@ -26,19 +34,10 @@ public class CodeDetail {
         this.codeOther = codeOther;
         this.isActive = isActive;
         this.displayOrder = displayOrder;
-    }
-
-    @Override
-    public String toString() {
-        return "CodeDetail{" +
-                "codeDetailId=" + codeDetailId +
-                ", codeId=" + codeId +
-                ", detailCode='" + detailCode + '\'' +
-                ", codeNameKor='" + codeNameKor + '\'' +
-                ", codeNameEng='" + codeNameEng + '\'' +
-                ", codeOther='" + codeOther + '\'' +
-                ", isActive=" + isActive +
-                ", displayOrder=" + displayOrder +
-                '}';
+        this.remarks = remarks;
+        this.etc1 = etc1;
+        this.etc2 = etc2;
+        this.etc3 = etc3;
+        this.etc4 = etc4;
     }
 }

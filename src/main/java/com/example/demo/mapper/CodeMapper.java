@@ -12,9 +12,10 @@ import java.util.List;
 public interface CodeMapper {
 
 
-    List<Code> getCodeList(@Param("code") String code,
-                           @Param("codeCategoryName") String codeCategoryName,
-                           @Param("isActive") Boolean isActive);
+     List<Code> getCodeList(@Param("code") String code,
+                            @Param("codeCategoryName") String codeCategoryName,
+                            @Param("isActive") Boolean isActive);
+
 
 
     void save(Code code);
@@ -23,7 +24,7 @@ public interface CodeMapper {
 
     void delete(Long codeId);
 
-    @Select("select * from codeDetail where codeId = #{codeId}")
+    @Select("select * from codeDetail where codeId = #{codeId} order by displayOrder")
     List<CodeDetail> getCodeDetailList(Long codeId);
 
     void detailSave(CodeDetail entity);
@@ -44,4 +45,8 @@ public interface CodeMapper {
 
     // delete 동적 배치쿼리 성공
     void deleteBatch(List<Long> list);
+
+    int getTotalCodeCount(String code, String codeCategoryName, Boolean isActive);
+
+    Long getTotalCount();
 }
