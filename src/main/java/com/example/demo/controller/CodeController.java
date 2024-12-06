@@ -45,12 +45,12 @@ public class CodeController {
         int startNum = (pageNum - 1) * pageSize;
 
 
+
         List<Code> codeList =  codeService.getCodeList(code,codeCategoryName,isActive);
 
 
-
-
         String jsonResponse = Result.result("codeList",codeList);
+
 
         return ResponseEntity
                 .ok()
@@ -90,7 +90,7 @@ public class CodeController {
     }
 
     @GetMapping("/code/detail")// 코드상세 조회 api
-    public ResponseEntity<String> getCodeDetailList(@RequestParam(value = "codeId") Long codeId) {
+    public ResponseEntity<String> getCodeDetailList(@RequestParam(value = "codeId") String codeId) {
 
         System.out.println("codeId = " + codeId);
         List<CodeDetail> codeDetailList = codeService.getCodeDetailList(codeId);

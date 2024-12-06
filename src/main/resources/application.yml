@@ -7,10 +7,10 @@
 
 spring:
   datasource:
-    url: jdbc:log4jdbc:oracle:thin:@192.168.0.110:1521:cimms # 또는 Service Name 형식
+    url: jdbc:log4jdbc:oracle:thin:@192.168.0.113:1521:cimms # 또는 Service Name 형식
     driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
-    username: MES_TOBE
-    password: MES_TOBE
+    username: CIMMS_TOBE
+    password: CIMMS_TOBE
 
 logging:
   level:

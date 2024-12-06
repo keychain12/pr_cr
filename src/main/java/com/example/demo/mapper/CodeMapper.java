@@ -22,16 +22,16 @@ public interface CodeMapper {
 
     void modify(Code code);
 
-    void delete(Long codeId);
+    void delete(String codeId);
 
-    @Select("select * from codeDetail where codeId = #{codeId} order by displayOrder")
-    List<CodeDetail> getCodeDetailList(Long codeId);
+    @Select("select * from codeDetailT where codeId = #{codeId} order by displayOrder")
+    List<CodeDetail> getCodeDetailList(String codeId);
 
     void detailSave(CodeDetail entity);
 
     void detailModify(CodeDetail entity);
 
-    void detailDelete(Long codeDetailId);
+    void detailDelete(String codeDetailId);
 
 
 
@@ -44,9 +44,18 @@ public interface CodeMapper {
     void updateBatch(List<CodeDetail> list);
 
     // delete 동적 배치쿼리 성공
-    void deleteBatch(List<Long> list);
+    void deleteBatch(List<String> list);
+
+
+
+
 
     int getTotalCodeCount(String code, String codeCategoryName, Boolean isActive);
 
     Long getTotalCount();
+
+
+    boolean existsByCodeId(String codeId);
+
+    boolean existsByDetailCode(@Param("detailCode") String detailCode,@Param("codeId") String codeId);
 }

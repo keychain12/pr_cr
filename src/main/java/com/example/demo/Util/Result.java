@@ -21,7 +21,9 @@ public class Result {
     public static <T> String result(String name, List<T> list){
         Gson gson = new Gson();
         JsonObject jsonObject = new JsonObject();
+
         jsonObject.add(name, gson.toJsonTree(list));
+
 
         return gson.toJson(jsonObject);
     }

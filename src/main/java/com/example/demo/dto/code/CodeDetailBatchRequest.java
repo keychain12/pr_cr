@@ -10,7 +10,7 @@ import java.util.List;
 @Data
 public class CodeDetailBatchRequest {
 
-    private Long codeId;
+    private String codeId;
 
     @Valid
     private List<CodeDetailRequest> insertDetailCodes;

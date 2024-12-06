@@ -26,11 +26,11 @@ public class CodeRepository {
         codeMapper.modify(code);
     }
 
-    public void delete(Long codeId) {
+    public void delete(String codeId) {
         codeMapper.delete(codeId);
     }
 
-    public List<CodeDetail> getCodeDetailList(Long codeId) {
+    public List<CodeDetail> getCodeDetailList(String codeId) {
         return codeMapper.getCodeDetailList(codeId);
     }
 
@@ -43,7 +43,7 @@ public class CodeRepository {
         codeMapper.detailModify(entity);
     }
 
-    public void detailDelete(Long codeDetailId) {
+    public void detailDelete(String codeDetailId) {
         codeMapper.detailDelete(codeDetailId);
     }
 
@@ -58,12 +58,20 @@ public class CodeRepository {
         codeMapper.updateBatch(list);
     }
 
-    public void deleteBatch(List<Long> list) {
+    public void deleteBatch(List<String> list) {
         codeMapper.deleteBatch(list);
     }
 
 
     public Long getTotalCount() {
         return codeMapper.getTotalCount();
+    }
+
+    public boolean existsByCodeId(String codeId) {
+        return codeMapper.existsByCodeId(codeId);
+    }
+
+    public boolean existsByDetailCode(String detailCode, String codeId) {
+        return codeMapper.existsByDetailCode(detailCode , codeId);
     }
 }

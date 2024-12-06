@@ -5,10 +5,10 @@
 <mapper namespace="com.example.demo.mapper.CodeMapper">
 
     <select id="getCodeList" resultType="com.example.demo.domain.Code">
-        SELECT * FROM Code
+        SELECT * FROM CodeT
         <where>
             <if test="code != null and code != ''">
-                AND code LIKE CONCAT(CONCAT('%', #{code}), '%')
+                AND codeId LIKE CONCAT(CONCAT('%', #{code}), '%')
             </if>
             <if test="codeCategoryName != null and codeCategoryName != ''">
                 AND codeCategoryName LIKE CONCAT(CONCAT('%', #{codeCategoryName}), '%')
@@ -17,22 +17,27 @@
                 AND isActive = #{isActive}
             </if>
         </where>
-        ORDER BY codeId DESC
+
     </select>
 
     <select id="getTotalCount">
-        select count(*) from Code
+        select count(*) from CodeT
     </select>
 
     <insert id="save">
-        INSERT INTO code (codeId, code, codeCategoryName, codeDescription,taskType, isStandardCode, isActive)
-        VALUES (code_seq.nextval, #{code}, #{codeCategoryName}, #{codeDescription},#{taskType}, #{isStandardCode}, #{isActive})
+        INSERT INTO codeT (codeId, codeCategoryName, codeDescription,taskType, isStandardCode, isActive)
+        VALUES (#{codeId}, #{codeCategoryName}, #{codeDescription},#{taskType}, #{isStandardCode}, #{isActive})
     </insert>
 
+    <select id="existsByCodeId" resultType="boolean">
+        SELECT COUNT(*)
+        FROM codeT
+        WHERE codeId = #{codeId}
+    </select>
+
     <update id="modify">
-        UPDATE Code
+        UPDATE CodeT
         SET
-        code = #{code},
         codeCategoryName = #{codeCategoryName},
         codeDescription = #{codeDescription},
         taskType = #{taskType},
@@ -42,37 +47,68 @@
     </update>
 
     <delete id="delete">
-        delete from code where codeId = #{codeId}
+        delete from codeT where codeId = #{codeId}
     </delete>
 
 
+    <select id="existsByDetailCode" resultType="boolean">
+        SELECT COUNT(*)
+        FROM codeDetailT
+        WHERE detailCode = #{detailCode} AND codeId = #{codeId}
+    </select>
 
 
     <insert id="detailSave">
-        insert into codeDetail (Codedetailid,
-        detailcode,
-        Codeid,
-        Codenamekor,
-        Codenameeng,
-        isactive,
-        Codeother, displayOrder)Values(codedetail_seq.nextval,#{detailCode},#{codeId},#{codeNameKor},#{codeNameEng},#{isActive},#{codeOther},#{displayOrder})
+        INSERT INTO codeDetailT (
+        detailCode,
+        codeId,
+        codeNameKor,
+        codeNameEng,
+        codeOther,
+        isActive,
+        displayOrder,
+        Remarks,
+        etc1,
+        etc2,
+        etc3,
+        etc4
+        )
+        VALUES (
+        #{detailCode},
+        #{codeId},
+        #{codeNameKor},
+        #{codeNameEng},
+        #{codeOther},
+        #{isActive},
+        #{displayOrder},
+        #{remarks},
+        #{etc1},
+        #{etc2},
+        #{etc3},
+        #{etc4}
+        )
     </insert>
 
+
     <update id="detailModify">
-        UPDATE codeDetail
+        UPDATE codeDetailT
         SET
-        detailCode = #{detailCode},
         codeNameKor = #{codeNameKor},
         codeNameEng = #{codeNameEng},
-        codeOther = #{codeOther , jdbcType=VARCHAR},
+        codeOther = #{codeOther, jdbcType=VARCHAR},
         isActive = #{isActive},
-        displayOrder = #{displayOrder}
+        displayOrder = #{displayOrder},
+        Remarks = #{remarks},       <!-- 비고 -->
+        etc1 = #{etc1},             <!-- 기타 1 -->
+        etc2 = #{etc2},             <!-- 기타 2 -->
+        etc3 = #{etc3},             <!-- 기타 3 -->
+        etc4 = #{etc4}              <!-- 기타 4 -->
         WHERE
-        codeDetailId = #{codeDetailId}
+        detailCode = #{detailCode} and codeId = #{codeId}
     </update>
 
     <delete id="detailDelete">
-        delete from codeDetail where codeDetailId = #{codeDetailId}
+        delete from codeDetailT where detailCode = #{detailCode}
     </delete>
 
 
@@ -84,9 +120,9 @@
 
 <!-- insert 배치 쿼리 인데 안되네;  / open="DECLARE BEGIN" close="; END;" 이거넣어서 이제되긴하는데 문제생길수도 있다네 -->
     <insert id="insertBatch">
-        <foreach collection="list" item="CodeDetail" separator=";" open="DECLARE BEGIN" close="; END;">
-            INSERT INTO codeDetail (
-            codeDetailId,
+        INSERT ALL
+        <foreach collection="list" item="CodeDetail" separator=" ">
+            INTO codeDetailT (
             detailCode,
             codeId,
             codeNameKor,
@@ -101,22 +137,23 @@
             etc4
             )
             VALUES (
-            codedetail_seq.nextval,
             #{CodeDetail.detailCode, jdbcType=VARCHAR},
-            #{CodeDetail.codeId, jdbcType=INTEGER},
+            #{CodeDetail.codeId, jdbcType=VARCHAR},
             #{CodeDetail.codeNameKor, jdbcType=VARCHAR},
             #{CodeDetail.codeNameEng, jdbcType=VARCHAR},
-            #{CodeDetail.isActive, jdbcType=BOOLEAN},
+            #{CodeDetail.isActive, jdbcType=INTEGER},
             #{CodeDetail.codeOther, jdbcType=VARCHAR},
             #{CodeDetail.displayOrder, jdbcType=INTEGER},
-            #{CodeDetail.remarks, jdbcType=VARCHAR},  <!-- 비고 -->
-            #{CodeDetail.etc1, jdbcType=VARCHAR},     <!-- 기타 1 -->
-            #{CodeDetail.etc2, jdbcType=VARCHAR},     <!-- 기타 2 -->
-            #{CodeDetail.etc3, jdbcType=VARCHAR},     <!-- 기타 3 -->
-            #{CodeDetail.etc4, jdbcType=VARCHAR}      <!-- 기타 4 -->
+            #{CodeDetail.remarks, jdbcType=VARCHAR},
+            #{CodeDetail.etc1, jdbcType=VARCHAR},
+            #{CodeDetail.etc2, jdbcType=VARCHAR},
+            #{CodeDetail.etc3, jdbcType=VARCHAR},
+            #{CodeDetail.etc4, jdbcType=VARCHAR}
             )
         </foreach>
+        SELECT * FROM dual;
     </insert>
+
 
 
 
@@ -125,10 +162,9 @@
     <!--     update 배치 쿼리인데 안됨;   open="DECLARE BEGIN" close="; END;" 이거붙히고나서 되긴하는데 문제생길수있다는데-->
     <update id="updateBatch">
         <foreach collection="list" item="item" separator=";" open="DECLARE BEGIN" close="; END;">
-            UPDATE codeDetail
+            UPDATE codeDetailT
             SET
             <trim prefix=" " suffixOverrides=",">
-                <if test="item.detailCode != null">detailCode = #{item.detailCode},</if>
                 <if test="item.codeNameKor != null">codeNameKor = #{item.codeNameKor},</if>
                 <if test="item.codeNameEng != null">codeNameEng = #{item.codeNameEng},</if>
                 <if test="item.codeOther != null">codeOther = #{item.codeOther, jdbcType=VARCHAR},</if>
@@ -140,16 +176,16 @@
                 <if test="item.etc3 != null">etc3 = #{item.etc3, jdbcType=VARCHAR},</if>
                 <if test="item.etc4 != null">etc4 = #{item.etc4, jdbcType=VARCHAR}</if>
             </trim>
-            WHERE codeDetailId = #{item.codeDetailId}
+            WHERE detailCode = #{item.detailCode}
         </foreach>
     </update>
 
     <!-- 배치 삭제 쿼리  인데 이건되네 ;-->
     <delete id="deleteBatch">
         DELETE FROM codeDetail
-        WHERE codeDetailId IN
+        WHERE detailCode IN
         <foreach collection="list" item="codeDetailId" open="(" separator="," close=")">
-            #{codeDetailId}
+            #{detailCode}
         </foreach>
     </delete>
 

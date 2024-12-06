@@ -9,9 +9,8 @@ import lombok.ToString;
 @Getter
 @ToString
 public class CodeDetail {
-    private Long codeDetailId; // 코드상세 id pk
-    private Long codeId;        // 코드 id fk
-    private String detailCode; // 세부코드
+    private String codeId;        // 코드 id fk
+    private String detailCode; // 세부코드 pk
     private String codeNameKor; //코드한글명
     private String codeNameEng; //코드영문명
     private String codeOther; //코드기타명
@@ -24,9 +23,7 @@ public class CodeDetail {
     private String etc4; //기타4
 
     @Builder
-
-    public CodeDetail(Long codeDetailId, Long codeId, String detailCode, String codeNameKor, String codeNameEng, String codeOther, Integer isActive, Long displayOrder, String remarks, String etc1, String etc2, String etc3, String etc4) {
-        this.codeDetailId = codeDetailId;
+    public CodeDetail(String codeId, String detailCode, String codeNameKor, String codeNameEng, String codeOther, Integer isActive, Long displayOrder, String remarks, String etc1, String etc2, String etc3, String etc4) {
         this.codeId = codeId;
         this.detailCode = detailCode;
         this.codeNameKor = codeNameKor;

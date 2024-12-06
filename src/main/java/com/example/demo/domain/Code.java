@@ -10,8 +10,7 @@ import lombok.ToString;
 @ToString
 public class Code {
 
-    private Long codeId; // id값
-    private String code;  // 코드
+    private String codeId; // 코드
     private String codeCategoryName; //코드분류명
     private String codeDescription; // 코드설명
     private String taskType;    // 업무구분
@@ -19,9 +18,8 @@ public class Code {
     private Integer isActive;          // 사용여부
 
     @Builder
-    public Code(Long codeId, String code, String codeCategoryName, String codeDescription, String taskType, Integer isStandardCode, Integer isActive) {
+    public Code(String codeId, String codeCategoryName, String codeDescription, String taskType, Integer isStandardCode, Integer isActive) {
         this.codeId = codeId;
-        this.code = code;
         this.codeCategoryName = codeCategoryName;
         this.codeDescription = codeDescription;
         this.taskType = taskType;
